@@ -21,12 +21,37 @@
 #    along with MFRC522-Python.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+
+
 import RPi.GPIO as GPIO
 import MFRC522
 import signal
+from time import sleep
 
 continue_reading = True
 
+# Motor Driver Params
+motor1A = 18
+motor1B = 16
+motor1E = 12
+GPIO.setup(motor1A, GPIO.OUT)
+GPIO.setup(motor1B, GPIO.OUT)
+GPIO.setup(motor1E, GPIO.OUT)
+
+# Motor Contol Code
+def disengage():
+    GPIO.output(motor1A, GPIO.HIGH)
+    GPIO.output(motor1B, GPIO.LOW)
+    GPIO.output(motor1E, GPIO.HIGH)
+    sleep(1)
+    GPIO.output(motor1E, GPIO.LOW)
+    sleep(5)
+    GPIO.output(motor1A, GPIO.LOW)
+    GPIO.output(motor1B, GPIO.HIGH)
+    GPIO.output(motor1E, GPIO.HIGH)
+    sleep(1)
+    GPIO.output(motor1E, GPIO.LOW)
+    
 # Capture SIGINT for cleanup when the script is aborted
 def end_read(signal,frame):
     global continue_reading
@@ -78,3 +103,6 @@ while continue_reading:
             MIFAREReader.MFRC522_StopCrypto1()
         else:
             print "Authentication error"
+            
+
+       
